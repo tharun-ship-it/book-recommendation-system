@@ -199,17 +199,25 @@ st.markdown(f"""
         color: white;
         border: none;
         border-radius: 25px;
-        padding: 0.6rem 1.5rem;
+        padding: 0.75rem 2rem;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
         font-size: 0.95rem;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+        white-space: nowrap !important;
+        min-width: fit-content;
+        width: auto !important;
     }}
     
     .stButton>button:hover {{
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+    }}
+    
+    /* Ensure button text stays on single line */
+    .stButton>button p {{
+        white-space: nowrap !important;
     }}
     
     /* Tabs */
@@ -268,6 +276,16 @@ if 'selected_user' not in st.session_state:
     st.session_state.selected_user = None
 if 'selected_mood' not in st.session_state:
     st.session_state.selected_mood = None
+if 'user_selectbox_key' not in st.session_state:
+    st.session_state.user_selectbox_key = 0
+if 'mood_selectbox_key' not in st.session_state:
+    st.session_state.mood_selectbox_key = 0
+if 'show_similar' not in st.session_state:
+    st.session_state.show_similar = False
+if 'similar_book_key' not in st.session_state:
+    st.session_state.similar_book_key = 0
+if 'selected_similar_book' not in st.session_state:
+    st.session_state.selected_similar_book = None
 
 # ============================================================================
 # BOOK DATA
@@ -578,10 +596,20 @@ def display_metric_card(value: str, label: str, icon: str = "📊"):
 
 
 def clear_recommendations():
-    """Clear the recommendations state."""
+    """Clear the recommendations state and reset selections."""
     st.session_state.show_recommendations = False
     st.session_state.selected_user = None
     st.session_state.selected_mood = None
+    # Increment keys to force selectbox reset
+    st.session_state.user_selectbox_key += 1
+    st.session_state.mood_selectbox_key += 1
+
+
+def clear_similar_books():
+    """Clear the similar books state and reset selection."""
+    st.session_state.show_similar = False
+    st.session_state.selected_similar_book = None
+    st.session_state.similar_book_key += 1
 
 
 def main():
@@ -717,17 +745,20 @@ def main():
             selected_user = st.selectbox(
                 "Select a User Profile",
                 users,
-                help="Each user has a unique reading history"
+                help="Each user has a unique reading history",
+                key=f"user_select_{st.session_state.user_selectbox_key}"
             )
             
-            # Buttons row
-            col_btn1, col_btn2, col_space = st.columns([1, 1, 4])
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            
+            # Buttons row with proper spacing
+            col_btn1, col_btn2, col_space = st.columns([1.5, 1, 3.5])
             
             with col_btn1:
-                get_recs = st.button("🚀 Get Recommendations", type="primary", use_container_width=True)
+                get_recs = st.button("🚀 Get Recommendations", type="primary")
             
             with col_btn2:
-                clear_btn = st.button("🗑️ Clear", use_container_width=True, on_click=clear_recommendations)
+                clear_btn = st.button("🗑️ Clear", on_click=clear_recommendations)
             
             if get_recs:
                 st.session_state.show_recommendations = True
@@ -770,17 +801,20 @@ def main():
             selected_mood = st.selectbox(
                 "What's your reading mood today?",
                 list(READING_MOODS.keys()),
-                help="We'll find books that match your current vibe"
+                help="We'll find books that match your current vibe",
+                key=f"mood_select_{st.session_state.mood_selectbox_key}"
             )
             
-            # Buttons row
-            col_btn1, col_btn2, col_space = st.columns([1, 1, 4])
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            
+            # Buttons row with proper spacing
+            col_btn1, col_btn2, col_space = st.columns([1.2, 1, 3.8])
             
             with col_btn1:
-                get_mood_recs = st.button("🎭 Find Books", type="primary", use_container_width=True)
+                get_mood_recs = st.button("🎭 Find Books", type="primary")
             
             with col_btn2:
-                clear_mood_btn = st.button("🗑️ Clear", use_container_width=True, key="clear_mood", on_click=clear_recommendations)
+                clear_mood_btn = st.button("🗑️ Clear", key="clear_mood", on_click=clear_recommendations)
             
             if get_mood_recs:
                 st.session_state.show_recommendations = True
@@ -864,20 +898,30 @@ def main():
         selected_book = st.selectbox(
             "Select a book you enjoyed",
             book_titles,
-            help="We'll find books similar to this one"
+            help="We'll find books similar to this one",
+            key=f"book_select_{st.session_state.similar_book_key}"
         )
         
-        col_btn1, col_btn2, col_space = st.columns([1, 1, 4])
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        
+        col_btn1, col_btn2, col_space = st.columns([1.3, 1, 3.7])
         
         with col_btn1:
-            find_similar = st.button("🔍 Find Similar", type="primary", use_container_width=True)
+            find_similar = st.button("🔍 Find Similar", type="primary")
+        
+        with col_btn2:
+            clear_similar = st.button("🗑️ Clear", key="clear_similar", on_click=clear_similar_books)
         
         if find_similar:
-            book_row = books_df[books_df["title"] == selected_book].iloc[0]
+            st.session_state.show_similar = True
+            st.session_state.selected_similar_book = selected_book
+        
+        if st.session_state.show_similar and st.session_state.selected_similar_book:
+            book_row = books_df[books_df["title"] == st.session_state.selected_similar_book].iloc[0]
             
             st.markdown(f"""
             <div class="info-box">
-                <strong>Selected: {selected_book}</strong><br>
+                <strong>Selected: {st.session_state.selected_similar_book}</strong><br>
                 <span style="color: {COLORS['text_light']};">
                     by {book_row['author']} · {book_row['genre']} · {get_star_rating(book_row['rating'])} {book_row['rating']:.2f}
                 </span>
@@ -889,7 +933,7 @@ def main():
                     book_row["book_id"], books_df, n_recommendations
                 )
                 
-                st.markdown(f"### 📚 Books Similar to '{selected_book}'")
+                st.markdown(f"### 📚 Books Similar to '{st.session_state.selected_similar_book}'")
                 
                 for i, rec in enumerate(similar_books, 1):
                     display_book_card(rec, i)
