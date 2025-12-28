@@ -87,7 +87,10 @@ st.markdown(f"""
     
     .author-card p {{
         margin: 0.3rem 0;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }}
     
     .author-card a {{
@@ -830,7 +833,7 @@ def main():
         
         rec_method = st.radio(
             "Choose your recommendation method:",
-            ["👤 By User Profile", "🎭 By Reading Mood"],
+            ["👤 By User Profile", "💭 By Reading Mood"],
             horizontal=True
         )
         
@@ -936,7 +939,7 @@ def main():
             col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 1, 3.6])
             
             with col_btn1:
-                get_mood_recs = st.button("🎭 Find Books", type="primary")
+                get_mood_recs = st.button("💎 Discover Books", type="primary")
             
             with col_btn2:
                 clear_mood_btn = st.button("🗑️ Clear", key="clear_mood", on_click=clear_recommendations)
