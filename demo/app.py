@@ -1,11 +1,11 @@
 """
-Interactive Book Recommendation Demo with Streamlit.
+Book Recommendation System - Interactive Demo Application
 
-A visually stunning, recruiter-ready demo showcasing the KNN-based
-book recommendation system with real book data and interactive features.
+A professional Streamlit-based web application for book recommendations
+using K-Nearest Neighbors with collaborative filtering.
 
 Author: Tharun Ponnam
-Run with: streamlit run demo/app.py
+GitHub: @tharun-ship-it
 """
 
 import streamlit as st
@@ -13,14 +13,13 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 from dataclasses import dataclass
 from typing import List
 import random
 
 # Page configuration
 st.set_page_config(
-    page_title="📚 Book Recommendation System | KNN",
+    page_title="Book Recommendation System | Tharun Ponnam",
     page_icon="📚",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -30,21 +29,18 @@ st.set_page_config(
 # COLOR SCHEME - Warm Book Theme (Coral, Amber, Terracotta)
 # ============================================================================
 COLORS = {
-    "primary": "#E94560",      # Coral Red
-    "secondary": "#F18F01",    # Amber Orange
-    "accent": "#C44536",       # Terracotta
-    "highlight": "#F4A261",    # Sandy Brown
-    "background": "#FFF8F0",   # Warm White
-    "card_bg": "#FDF6EC",      # Cream
-    "text_dark": "#2D2A32",    # Dark Gray
-    "text_light": "#6B5B6E",   # Muted Purple-Gray
-    "success": "#2ECC71",      # Green
-    "gradient_start": "#E94560",
-    "gradient_end": "#F18F01"
+    "primary": "#E94560",
+    "secondary": "#F18F01",
+    "accent": "#C44536",
+    "highlight": "#F4A261",
+    "background": "#FFF8F0",
+    "card_bg": "#FDF6EC",
+    "text_dark": "#2D2A32",
+    "text_light": "#6B5B6E",
 }
 
 # ============================================================================
-# CUSTOM CSS - Premium Book Theme
+# CUSTOM CSS
 # ============================================================================
 st.markdown(f"""
 <style>
@@ -56,7 +52,7 @@ st.markdown(f"""
     
     .main-header {{
         font-family: 'Playfair Display', serif;
-        font-size: 3rem;
+        font-size: 2.8rem;
         font-weight: 700;
         background: linear-gradient(135deg, {COLORS['primary']} 0%, {COLORS['secondary']} 100%);
         -webkit-background-clip: text;
@@ -64,65 +60,116 @@ st.markdown(f"""
         background-clip: text;
         text-align: center;
         margin-bottom: 0.5rem;
-        letter-spacing: -1px;
     }}
     
     .sub-header {{
         font-family: 'Inter', sans-serif;
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         color: {COLORS['text_light']};
         text-align: center;
         margin-bottom: 2rem;
-        font-weight: 400;
     }}
     
-    .book-card {{
-        background: white;
-        padding: 1.5rem;
-        border-radius: 16px;
-        margin: 0.75rem 0;
-        border-left: 5px solid {COLORS['primary']};
-        box-shadow: 0 4px 15px rgba(233, 69, 96, 0.1);
-        transition: all 0.3s ease;
+    /* Author Info Card */
+    .author-card {{
+        background: linear-gradient(135deg, {COLORS['primary']} 0%, {COLORS['secondary']} 100%);
+        padding: 1.2rem;
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 1rem;
     }}
     
-    .book-card:hover {{
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(233, 69, 96, 0.2);
-    }}
-    
-    .book-title {{
-        font-family: 'Playfair Display', serif;
-        font-size: 1.25rem;
+    .author-card h3 {{
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
         font-weight: 600;
-        color: {COLORS['text_dark']};
-        margin-bottom: 0.5rem;
     }}
     
-    .book-author {{
-        font-family: 'Inter', sans-serif;
-        font-size: 0.95rem;
-        color: {COLORS['text_light']};
-        margin-bottom: 0.5rem;
+    .author-card p {{
+        margin: 0.3rem 0;
+        font-size: 0.9rem;
     }}
     
-    .book-genre {{
-        display: inline-block;
-        background: linear-gradient(135deg, {COLORS['primary']}20 0%, {COLORS['secondary']}20 100%);
+    .author-card a {{
+        color: #FFD93D;
+        text-decoration: none;
+    }}
+    
+    /* Dataset Info Card */
+    .dataset-card {{
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        border-left: 4px solid {COLORS['primary']};
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }}
+    
+    .dataset-card h4 {{
         color: {COLORS['primary']};
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
+        margin: 0 0 0.5rem 0;
+        font-size: 0.95rem;
+    }}
+    
+    .dataset-card p {{
+        margin: 0.2rem 0;
+        font-size: 0.85rem;
+        color: {COLORS['text_light']};
+    }}
+    
+    /* Features Card */
+    .features-card {{
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        border-left: 4px solid {COLORS['secondary']};
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }}
+    
+    .features-card h4 {{
+        color: {COLORS['secondary']};
+        margin: 0 0 0.5rem 0;
+        font-size: 0.95rem;
+    }}
+    
+    .features-card p {{
+        margin: 0.2rem 0;
+        font-size: 0.85rem;
+        color: {COLORS['text_dark']};
+    }}
+    
+    /* Tech Tags */
+    .tech-tag {{
+        display: inline-block;
+        background: linear-gradient(135deg, {COLORS['primary']}15 0%, {COLORS['secondary']}15 100%);
+        color: {COLORS['primary']};
+        padding: 0.2rem 0.5rem;
+        border-radius: 5px;
+        font-size: 0.75rem;
+        margin: 0.15rem;
         font-weight: 500;
     }}
     
-    .book-score {{
-        font-family: 'Inter', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: {COLORS['secondary']};
+    /* Links Card */
+    .links-card {{
+        background: {COLORS['card_bg']};
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
     }}
     
+    .links-card a {{
+        color: {COLORS['primary']};
+        text-decoration: none;
+        font-weight: 500;
+    }}
+    
+    .links-card a:hover {{
+        text-decoration: underline;
+    }}
+    
+    /* Metric Card */
     .metric-card {{
         background: white;
         padding: 1.5rem;
@@ -146,15 +193,16 @@ st.markdown(f"""
         margin-top: 0.5rem;
     }}
     
+    /* Buttons */
     .stButton>button {{
         background: linear-gradient(135deg, {COLORS['primary']} 0%, {COLORS['secondary']} 100%);
         color: white;
         border: none;
-        border-radius: 30px;
-        padding: 0.75rem 2.5rem;
+        border-radius: 25px;
+        padding: 0.6rem 1.5rem;
         font-family: 'Inter', sans-serif;
         font-weight: 600;
-        font-size: 1rem;
+        font-size: 0.95rem;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
     }}
@@ -164,6 +212,7 @@ st.markdown(f"""
         box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
     }}
     
+    /* Tabs */
     .stTabs [data-baseweb="tab-list"] {{
         gap: 8px;
         background: white;
@@ -176,7 +225,6 @@ st.markdown(f"""
         border-radius: 12px;
         font-family: 'Inter', sans-serif;
         font-weight: 500;
-        padding: 0.75rem 1.5rem;
     }}
     
     .stTabs [aria-selected="true"] {{
@@ -184,6 +232,7 @@ st.markdown(f"""
         color: white;
     }}
     
+    /* Section Header */
     .section-header {{
         font-family: 'Playfair Display', serif;
         font-size: 1.75rem;
@@ -195,22 +244,7 @@ st.markdown(f"""
         display: inline-block;
     }}
     
-    .bestseller-badge {{
-        background: linear-gradient(135deg, {COLORS['secondary']} 0%, #FFD93D 100%);
-        color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: inline-block;
-        margin-left: 0.5rem;
-    }}
-    
-    .rating-stars {{
-        color: {COLORS['secondary']};
-        font-size: 1.1rem;
-    }}
-    
+    /* Info Box */
     .info-box {{
         background: linear-gradient(135deg, {COLORS['primary']}10 0%, {COLORS['secondary']}10 100%);
         border-left: 4px solid {COLORS['primary']};
@@ -219,21 +253,24 @@ st.markdown(f"""
         margin: 1rem 0;
     }}
     
-    .footer {{
-        text-align: center;
-        padding: 2rem;
-        color: {COLORS['text_light']};
-        font-family: 'Inter', sans-serif;
-    }}
-    
+    /* Hide Streamlit elements */
     #MainMenu {{visibility: hidden;}}
     footer {{visibility: hidden;}}
 </style>
 """, unsafe_allow_html=True)
 
+# ============================================================================
+# SESSION STATE
+# ============================================================================
+if 'show_recommendations' not in st.session_state:
+    st.session_state.show_recommendations = False
+if 'selected_user' not in st.session_state:
+    st.session_state.selected_user = None
+if 'selected_mood' not in st.session_state:
+    st.session_state.selected_mood = None
 
 # ============================================================================
-# REAL BOOK DATA - Famous Books with Details
+# BOOK DATA
 # ============================================================================
 FAMOUS_BOOKS = [
     {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic Fiction", "year": 1960, "rating": 4.27, "ratings_count": 5012983, "bestseller": True},
@@ -301,7 +338,6 @@ READING_MOODS = {
 
 @dataclass
 class BookRecommendation:
-    """Data class for book recommendations."""
     title: str
     author: str
     genre: str
@@ -314,7 +350,6 @@ class BookRecommendation:
 
 
 def get_star_rating(rating: float) -> str:
-    """Convert numeric rating to star display."""
     full_stars = int(rating)
     half_star = 1 if rating - full_stars >= 0.5 else 0
     empty_stars = 5 - full_stars - half_star
@@ -322,7 +357,6 @@ def get_star_rating(rating: float) -> str:
 
 
 def format_number(num: int) -> str:
-    """Format large numbers with K/M suffix."""
     if num >= 1_000_000:
         return f"{num/1_000_000:.1f}M"
     elif num >= 1_000:
@@ -332,7 +366,6 @@ def format_number(num: int) -> str:
 
 @st.cache_data
 def load_books_data():
-    """Load and prepare books dataset."""
     df = pd.DataFrame(FAMOUS_BOOKS)
     df["book_id"] = range(len(df))
     return df
@@ -340,7 +373,6 @@ def load_books_data():
 
 @st.cache_data
 def generate_user_ratings(books_df, n_users=200, seed=42):
-    """Generate synthetic user ratings for demonstration."""
     np.random.seed(seed)
     random.seed(seed)
     
@@ -363,7 +395,6 @@ def generate_user_ratings(books_df, n_users=200, seed=42):
 
 
 def get_similar_books(book_id: int, books_df: pd.DataFrame, n: int = 10) -> List[BookRecommendation]:
-    """Get similar books based on genre and author."""
     target_book = books_df.iloc[book_id]
     target_genre = target_book["genre"]
     target_author = target_book["author"]
@@ -407,7 +438,6 @@ def get_similar_books(book_id: int, books_df: pd.DataFrame, n: int = 10) -> List
 
 
 def get_recommendations_by_mood(mood: str, books_df: pd.DataFrame, n: int = 10) -> List[BookRecommendation]:
-    """Get book recommendations based on reading mood."""
     target_genres = READING_MOODS.get(mood, [])
     
     recommendations = []
@@ -432,7 +462,6 @@ def get_recommendations_by_mood(mood: str, books_df: pd.DataFrame, n: int = 10) 
 
 def get_user_recommendations(user_id: str, ratings_df: pd.DataFrame, 
                             books_df: pd.DataFrame, n: int = 10) -> List[BookRecommendation]:
-    """Get personalized recommendations for a user."""
     user_ratings = ratings_df[ratings_df["user_id"] == user_id]
     liked_books = user_ratings[user_ratings["rating"] >= 4]["book_id"].tolist()
     rated_books = user_ratings["book_id"].tolist()
@@ -474,38 +503,71 @@ def get_user_recommendations(user_id: str, ratings_df: pd.DataFrame,
 
 
 def display_book_card(rec: BookRecommendation, rank: int):
-    """Display a beautiful book recommendation card."""
-    bestseller_badge = '<span class="bestseller-badge">🔥 BESTSELLER</span>' if rec.bestseller else ''
-    
-    st.markdown(f"""
-    <div class="book-card">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-                    <span style="font-size: 1.5rem; font-weight: 700; color: {COLORS['primary']}; margin-right: 1rem;">#{rank}</span>
-                    <span class="book-title">{rec.title}</span>
-                    {bestseller_badge}
-                </div>
-                <div class="book-author">by {rec.author} ({rec.year})</div>
-                <div style="margin: 0.5rem 0;">
-                    <span class="book-genre">{rec.genre}</span>
-                </div>
-                <div class="rating-stars">{get_star_rating(rec.rating)} {rec.rating:.2f} · {format_number(rec.ratings_count)} ratings</div>
-                <div style="margin-top: 0.5rem; color: {COLORS['text_light']}; font-size: 0.9rem; font-style: italic;">
-                    💡 {rec.reason}
-                </div>
+    """Display a book recommendation card using Streamlit components."""
+    with st.container():
+        col_rank, col_content, col_score = st.columns([0.8, 6, 1.5])
+        
+        with col_rank:
+            st.markdown(f"""
+            <div style="font-size: 1.8rem; font-weight: 700; color: {COLORS['primary']}; padding-top: 0.5rem;">
+                #{rank}
             </div>
-            <div style="text-align: center; padding-left: 1rem;">
-                <div style="font-size: 0.8rem; color: {COLORS['text_light']};">Match Score</div>
-                <div class="book-score">{rec.score:.0%}</div>
+            """, unsafe_allow_html=True)
+        
+        with col_content:
+            if rec.bestseller:
+                st.markdown(f"""
+                <div style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; color: {COLORS['text_dark']};">
+                    {rec.title} <span style="background: linear-gradient(135deg, {COLORS['secondary']} 0%, #FFD93D 100%); color: white; padding: 0.2rem 0.6rem; border-radius: 15px; font-size: 0.7rem; font-weight: 600; margin-left: 0.5rem;">🔥 BESTSELLER</span>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600; color: {COLORS['text_dark']};">
+                    {rec.title}
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown(f"""
+            <div style="color: {COLORS['text_light']}; font-size: 0.95rem; margin: 0.3rem 0;">
+                by {rec.author} ({rec.year})
             </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+            
+            st.markdown(f"""
+            <div style="margin: 0.4rem 0;">
+                <span style="background: linear-gradient(135deg, {COLORS['primary']}20 0%, {COLORS['secondary']}20 100%); color: {COLORS['primary']}; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">
+                    {rec.genre}
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown(f"""
+            <div style="color: {COLORS['secondary']}; font-size: 1rem;">
+                {get_star_rating(rec.rating)} {rec.rating:.2f} · {format_number(rec.ratings_count)} ratings
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown(f"""
+            <div style="color: {COLORS['text_light']}; font-size: 0.85rem; font-style: italic; margin-top: 0.3rem;">
+                💡 {rec.reason}
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_score:
+            st.markdown(f"""
+            <div style="text-align: center; padding-top: 0.5rem;">
+                <div style="font-size: 0.75rem; color: {COLORS['text_light']};">Match Score</div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: {COLORS['secondary']};">{rec.score:.0%}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div style="border-bottom: 1px solid #f0e6e0; margin: 0.5rem 0 1rem 0;"></div>
+        """, unsafe_allow_html=True)
 
 
 def display_metric_card(value: str, label: str, icon: str = "📊"):
-    """Display a styled metric card."""
     st.markdown(f"""
     <div class="metric-card">
         <div style="font-size: 2rem; margin-bottom: 0.5rem;">{icon}</div>
@@ -515,36 +577,96 @@ def display_metric_card(value: str, label: str, icon: str = "📊"):
     """, unsafe_allow_html=True)
 
 
+def clear_recommendations():
+    """Clear the recommendations state."""
+    st.session_state.show_recommendations = False
+    st.session_state.selected_user = None
+    st.session_state.selected_mood = None
+
+
 def main():
     """Main application."""
     
-    # Header
-    st.markdown('<h1 class="main-header">📚 Book Recommendation System</h1>', 
-                unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Discover your next favorite book with K-Nearest Neighbors Algorithm</p>', 
-                unsafe_allow_html=True)
-    
-    # Sidebar
+    # ========================================================================
+    # SIDEBAR - Professional Layout like SMS Spam Detection
+    # ========================================================================
     with st.sidebar:
+        # App Title
         st.markdown(f"""
-        <div style="text-align: center; padding: 1rem;">
-            <div style="font-size: 4rem;">📚</div>
-            <h2 style="font-family: 'Playfair Display', serif; color: {COLORS['primary']};">BookRec AI</h2>
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <div style="font-size: 3rem;">📚</div>
+            <h2 style="font-family: 'Playfair Display', serif; color: {COLORS['primary']}; margin: 0.5rem 0;">Book Recommendation</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Author Info Card
+        st.markdown(f"""
+        <div class="author-card">
+            <h3>👤 Author</h3>
+            <p><strong>Tharun Ponnam</strong></p>
+            <p>🔗 <a href="https://github.com/tharun-ship-it" target="_blank">@tharun-ship-it</a></p>
+            <p>📧 tharunponnam007@gmail.com</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Dataset Info Card
+        st.markdown(f"""
+        <div class="dataset-card">
+            <h4>📊 Dataset</h4>
+            <p><strong>UCSD Book Graph (Goodreads)</strong></p>
+            <p>• 2.36M books</p>
+            <p>• 876K users</p>
+            <p>• 229M interactions</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Key Features Card
+        st.markdown(f"""
+        <div class="features-card">
+            <h4>✨ Key Features</h4>
+            <p>🔍 Real-time book recommendations</p>
+            <p>📈 89.2% precision (Hybrid KNN)</p>
+            <p>🧠 Collaborative filtering</p>
+            <p>📊 Content-based matching</p>
+            <p>🎭 Mood-based suggestions</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Technologies
+        st.markdown(f"""
+        <div class="dataset-card">
+            <h4>🛠️ Technologies</h4>
+            <div style="margin-top: 0.5rem;">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Scikit-Learn</span>
+                <span class="tech-tag">KNN</span>
+                <span class="tech-tag">Pandas</span>
+                <span class="tech-tag">Streamlit</span>
+                <span class="tech-tag">TF-IDF</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Links Card
+        st.markdown(f"""
+        <div class="links-card">
+            <h4 style="color: {COLORS['text_dark']}; margin: 0 0 0.5rem 0;">🔗 Links</h4>
+            <p>📂 <a href="https://github.com/tharun-ship-it/book-recommendation-system" target="_blank">GitHub Repository</a></p>
+            <p>📊 <a href="https://sites.google.com/eng.ucsd.edu/ucsdbookgraph/home" target="_blank">UCSD Dataset</a></p>
         </div>
         """, unsafe_allow_html=True)
         
         st.divider()
         
-        st.markdown(f"<h3 style='color: {COLORS['text_dark']};'>⚙️ Settings</h3>", 
-                   unsafe_allow_html=True)
+        # Settings
+        st.markdown(f"<h4 style='color: {COLORS['text_dark']};'>⚙️ Settings</h4>", unsafe_allow_html=True)
         
         n_neighbors = st.slider(
             "Number of Neighbors (K)",
             min_value=5,
             max_value=50,
             value=20,
-            step=5,
-            help="Higher K = More diverse recommendations"
+            step=5
         )
         
         n_recommendations = st.slider(
@@ -554,53 +676,14 @@ def main():
             value=10,
             step=1
         )
-        
-        st.divider()
-        
-        st.markdown(f"<h3 style='color: {COLORS['text_dark']};'>🧠 Algorithm</h3>", 
-                   unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div style="background: {COLORS['card_bg']}; padding: 1rem; border-radius: 12px; font-size: 0.9rem;">
-            <p><strong>K-Nearest Neighbors</strong></p>
-            <ul style="margin: 0; padding-left: 1.2rem;">
-                <li>Item-based Collaborative Filtering</li>
-                <li>Cosine Similarity Metric</li>
-                <li>Hybrid with Content Features</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.divider()
-        
-        st.markdown(f"<h3 style='color: {COLORS['text_dark']};'>📊 Dataset</h3>", 
-                   unsafe_allow_html=True)
-        
-        st.markdown(f"""
-        <div style="background: {COLORS['card_bg']}; padding: 1rem; border-radius: 12px; font-size: 0.9rem;">
-            <p><strong>UCSD Book Graph</strong></p>
-            <p style="color: {COLORS['text_light']};">
-                2.3M books · 876K users · 229M ratings
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.divider()
-        
-        st.markdown(f"""
-        <div style="text-align: center; padding: 1rem;">
-            <p style="color: {COLORS['text_light']}; font-size: 0.85rem;">Created by</p>
-            <p style="font-weight: 600; color: {COLORS['text_dark']};">Tharun Ponnam</p>
-            <p>
-                <a href="https://github.com/tharun-ship-it" target="_blank" style="color: {COLORS['primary']}; text-decoration: none;">
-                    GitHub
-                </a> · 
-                <a href="mailto:tharunponnam007@gmail.com" style="color: {COLORS['primary']}; text-decoration: none;">
-                    Email
-                </a>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    
+    # ========================================================================
+    # MAIN CONTENT
+    # ========================================================================
+    
+    # Header
+    st.markdown('<h1 class="main-header">📚 Book Recommendation System</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Discover your next favorite book with K-Nearest Neighbors Algorithm</p>', unsafe_allow_html=True)
     
     # Load data
     books_df = load_books_data()
@@ -615,10 +698,11 @@ def main():
         "📈 Model Performance"
     ])
     
-    # Tab 1: Get Recommendations
+    # ========================================================================
+    # TAB 1: Get Recommendations
+    # ========================================================================
     with tab1:
-        st.markdown('<div class="section-header">🎯 Personalized Recommendations</div>', 
-                   unsafe_allow_html=True)
+        st.markdown('<div class="section-header">🎯 Personalized Recommendations</div>', unsafe_allow_html=True)
         
         rec_method = st.radio(
             "Choose your recommendation method:",
@@ -629,23 +713,29 @@ def main():
         st.markdown("<br>", unsafe_allow_html=True)
         
         if rec_method == "👤 By User Profile":
-            col1, col2 = st.columns([2, 1])
+            users = ratings_df["user_id"].unique()[:50]
+            selected_user = st.selectbox(
+                "Select a User Profile",
+                users,
+                help="Each user has a unique reading history"
+            )
             
-            with col1:
-                users = ratings_df["user_id"].unique()[:50]
-                selected_user = st.selectbox(
-                    "Select a User Profile",
-                    users,
-                    help="Each user has a unique reading history"
-                )
+            # Buttons row
+            col_btn1, col_btn2, col_space = st.columns([1, 1, 4])
             
-            with col2:
-                st.markdown("<br>", unsafe_allow_html=True)
+            with col_btn1:
                 get_recs = st.button("🚀 Get Recommendations", type="primary", use_container_width=True)
             
+            with col_btn2:
+                clear_btn = st.button("🗑️ Clear", use_container_width=True, on_click=clear_recommendations)
+            
             if get_recs:
+                st.session_state.show_recommendations = True
+                st.session_state.selected_user = selected_user
+            
+            if st.session_state.show_recommendations and st.session_state.selected_user:
                 with st.spinner("Analyzing reading patterns..."):
-                    user_ratings = ratings_df[ratings_df["user_id"] == selected_user]
+                    user_ratings = ratings_df[ratings_df["user_id"] == st.session_state.selected_user]
                     
                     col1, col2, col3, col4 = st.columns(4)
                     with col1:
@@ -664,42 +754,48 @@ def main():
                     st.markdown("<br>", unsafe_allow_html=True)
                     
                     recommendations = get_user_recommendations(
-                        selected_user, ratings_df, books_df, n_recommendations
+                        st.session_state.selected_user, ratings_df, books_df, n_recommendations
                     )
                     
                     st.markdown(f"""
                     <div class="info-box">
-                        <strong>✨ Found {len(recommendations)} personalized recommendations for {selected_user}!</strong>
+                        <strong>✨ Found {len(recommendations)} personalized recommendations for {st.session_state.selected_user}!</strong>
                     </div>
                     """, unsafe_allow_html=True)
                     
                     for i, rec in enumerate(recommendations, 1):
                         display_book_card(rec, i)
         
-        else:
-            col1, col2 = st.columns([2, 1])
+        else:  # By Reading Mood
+            selected_mood = st.selectbox(
+                "What's your reading mood today?",
+                list(READING_MOODS.keys()),
+                help="We'll find books that match your current vibe"
+            )
             
-            with col1:
-                selected_mood = st.selectbox(
-                    "What's your reading mood today?",
-                    list(READING_MOODS.keys()),
-                    help="We'll find books that match your current vibe"
-                )
+            # Buttons row
+            col_btn1, col_btn2, col_space = st.columns([1, 1, 4])
             
-            with col2:
-                st.markdown("<br>", unsafe_allow_html=True)
+            with col_btn1:
                 get_mood_recs = st.button("🎭 Find Books", type="primary", use_container_width=True)
             
+            with col_btn2:
+                clear_mood_btn = st.button("🗑️ Clear", use_container_width=True, key="clear_mood", on_click=clear_recommendations)
+            
             if get_mood_recs:
-                with st.spinner(f"Finding {selected_mood.split()[1]} books..."):
+                st.session_state.show_recommendations = True
+                st.session_state.selected_mood = selected_mood
+            
+            if st.session_state.show_recommendations and st.session_state.selected_mood:
+                with st.spinner(f"Finding {st.session_state.selected_mood.split()[1]} books..."):
                     recommendations = get_recommendations_by_mood(
-                        selected_mood, books_df, n_recommendations
+                        st.session_state.selected_mood, books_df, n_recommendations
                     )
                     
-                    genres = ", ".join(READING_MOODS[selected_mood])
+                    genres = ", ".join(READING_MOODS[st.session_state.selected_mood])
                     st.markdown(f"""
                     <div class="info-box">
-                        <strong>{selected_mood} Mood Selected!</strong><br>
+                        <strong>{st.session_state.selected_mood} Mood Selected!</strong><br>
                         <span style="color: {COLORS['text_light']};">Searching in: {genres}</span>
                     </div>
                     """, unsafe_allow_html=True)
@@ -707,10 +803,11 @@ def main():
                     for i, rec in enumerate(recommendations, 1):
                         display_book_card(rec, i)
     
-    # Tab 2: Bestsellers
+    # ========================================================================
+    # TAB 2: Bestsellers
+    # ========================================================================
     with tab2:
-        st.markdown('<div class="section-header">🔥 Top Bestselling Books</div>', 
-                   unsafe_allow_html=True)
+        st.markdown('<div class="section-header">🔥 Top Bestselling Books</div>', unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="info-box">
@@ -757,23 +854,22 @@ def main():
             )
             display_book_card(rec, i)
     
-    # Tab 3: Find Similar Books
+    # ========================================================================
+    # TAB 3: Find Similar Books
+    # ========================================================================
     with tab3:
-        st.markdown('<div class="section-header">🔍 Find Similar Books</div>', 
-                   unsafe_allow_html=True)
+        st.markdown('<div class="section-header">🔍 Find Similar Books</div>', unsafe_allow_html=True)
         
-        col1, col2 = st.columns([3, 1])
+        book_titles = books_df["title"].tolist()
+        selected_book = st.selectbox(
+            "Select a book you enjoyed",
+            book_titles,
+            help="We'll find books similar to this one"
+        )
         
-        with col1:
-            book_titles = books_df["title"].tolist()
-            selected_book = st.selectbox(
-                "Select a book you enjoyed",
-                book_titles,
-                help="We'll find books similar to this one"
-            )
+        col_btn1, col_btn2, col_space = st.columns([1, 1, 4])
         
-        with col2:
-            st.markdown("<br>", unsafe_allow_html=True)
+        with col_btn1:
             find_similar = st.button("🔍 Find Similar", type="primary", use_container_width=True)
         
         if find_similar:
@@ -798,10 +894,11 @@ def main():
                 for i, rec in enumerate(similar_books, 1):
                     display_book_card(rec, i)
     
-    # Tab 4: Explore Data
+    # ========================================================================
+    # TAB 4: Explore Data
+    # ========================================================================
     with tab4:
-        st.markdown('<div class="section-header">📊 Dataset Explorer</div>', 
-                   unsafe_allow_html=True)
+        st.markdown('<div class="section-header">📊 Dataset Explorer</div>', unsafe_allow_html=True)
         
         col1, col2, col3, col4 = st.columns(4)
         with col1:
@@ -828,7 +925,6 @@ def main():
             fig_rating.update_layout(
                 plot_bgcolor="white",
                 paper_bgcolor="white",
-                font_family="Inter",
                 xaxis_title="Rating",
                 yaxis_title="Count"
             )
@@ -847,7 +943,6 @@ def main():
             fig_genre.update_layout(
                 plot_bgcolor="white",
                 paper_bgcolor="white",
-                font_family="Inter",
                 xaxis_title="Number of Books",
                 yaxis_title="",
                 showlegend=False,
@@ -855,36 +950,17 @@ def main():
             )
             st.plotly_chart(fig_genre, use_container_width=True)
         
-        books_df["decade"] = (books_df["year"] // 10) * 10
-        decade_counts = books_df.groupby("decade").size().reset_index(name="count")
-        decade_counts = decade_counts[decade_counts["decade"] >= 1800]
-        
-        fig_timeline = px.area(
-            decade_counts,
-            x="decade",
-            y="count",
-            title="📅 Books by Decade",
-            color_discrete_sequence=[COLORS["primary"]]
-        )
-        fig_timeline.update_layout(
-            plot_bgcolor="white",
-            paper_bgcolor="white",
-            font_family="Inter",
-            xaxis_title="Decade",
-            yaxis_title="Number of Books"
-        )
-        st.plotly_chart(fig_timeline, use_container_width=True)
-        
         st.markdown("### 📋 Sample Books")
         display_df = books_df[["title", "author", "genre", "year", "rating", "ratings_count", "bestseller"]].copy()
         display_df.columns = ["Title", "Author", "Genre", "Year", "Rating", "Ratings", "Bestseller"]
         display_df["Ratings"] = display_df["Ratings"].apply(format_number)
         st.dataframe(display_df.head(15), use_container_width=True, hide_index=True)
     
-    # Tab 5: Model Performance
+    # ========================================================================
+    # TAB 5: Model Performance
+    # ========================================================================
     with tab5:
-        st.markdown('<div class="section-header">📈 Model Performance</div>', 
-                   unsafe_allow_html=True)
+        st.markdown('<div class="section-header">📈 Model Performance</div>', unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="info-box">
@@ -936,7 +1012,6 @@ def main():
             barmode="group",
             plot_bgcolor="white",
             paper_bgcolor="white",
-            font_family="Inter",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
             yaxis_title="Score",
             xaxis_title=""
@@ -967,7 +1042,6 @@ def main():
             fig_pr.update_layout(
                 plot_bgcolor="white",
                 paper_bgcolor="white",
-                font_family="Inter",
                 xaxis_title="K (Number of Recommendations)",
                 yaxis_title="Score",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02)
@@ -1029,22 +1103,6 @@ def main():
                 <p>78.4% catalog coverage ensures diverse recommendations across the entire book collection.</p>
             </div>
             """, unsafe_allow_html=True)
-    
-    # Footer
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div class="footer">
-        <p>Built with ❤️ using Python, Scikit-Learn & Streamlit</p>
-        <p style="font-size: 0.85rem;">
-            <a href="https://github.com/tharun-ship-it/book-recommendation-system" target="_blank" style="color: {COLORS['primary']};">
-                ⭐ Star on GitHub
-            </a> · 
-            <a href="https://github.com/tharun-ship-it" target="_blank" style="color: {COLORS['primary']};">
-                Tharun Ponnam
-            </a>
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
