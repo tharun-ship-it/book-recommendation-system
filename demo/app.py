@@ -88,9 +88,11 @@ st.markdown(f"""
     .author-card p {{
         margin: 0.3rem 0;
         font-size: 0.85rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    }}
+    
+    .author-card .email {{
+        font-size: 0.78rem;
+        opacity: 0.95;
     }}
     
     .author-card a {{
@@ -732,7 +734,7 @@ def main():
             <h3>👤 Author</h3>
             <p><strong>Tharun Ponnam</strong></p>
             <p>🔗 <a href="https://github.com/tharun-ship-it" target="_blank">@tharun-ship-it</a></p>
-            <p>📧 tharunponnam007@gmail.com</p>
+            <p class="email">📧 tharunponnam007@gmail.com</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -850,8 +852,8 @@ def main():
             
             st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
             
-            # Buttons row with proper spacing - matching Find Similar section
-            col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.8, 0.2, 1, 3])
+            # Buttons row with proper spacing - consistent across all sections
+            col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.5, 0.2, 0.8, 3.5])
             
             with col_btn1:
                 get_recs = st.button("🚀 Get Recommendations", type="primary")
@@ -935,8 +937,8 @@ def main():
             
             st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
             
-            # Buttons row with proper spacing - matching Find Similar section
-            col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 1, 3.6])
+            # Buttons row with proper spacing - consistent across all sections
+            col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 0.8, 3.8])
             
             with col_btn1:
                 get_mood_recs = st.button("💎 Discover Books", type="primary")
@@ -1033,7 +1035,8 @@ def main():
         st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
         
         # Buttons row with proper spacing - consistent with other sections
-        col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 1, 3.6])
+        # Buttons row with proper spacing - consistent across all sections
+        col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 0.8, 3.8])
         
         with col_btn1:
             find_similar = st.button("🔍 Find Similar", type="primary")
