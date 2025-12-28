@@ -291,56 +291,125 @@ if 'selected_similar_book' not in st.session_state:
 # BOOK DATA
 # ============================================================================
 FAMOUS_BOOKS = [
+    # Classic Fiction
     {"title": "To Kill a Mockingbird", "author": "Harper Lee", "genre": "Classic Fiction", "year": 1960, "rating": 4.27, "ratings_count": 5012983, "bestseller": True},
     {"title": "1984", "author": "George Orwell", "genre": "Dystopian Fiction", "year": 1949, "rating": 4.19, "ratings_count": 4012832, "bestseller": True},
     {"title": "Pride and Prejudice", "author": "Jane Austen", "genre": "Romance", "year": 1813, "rating": 4.28, "ratings_count": 3654821, "bestseller": True},
     {"title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "genre": "Classic Fiction", "year": 1925, "rating": 3.93, "ratings_count": 4821093, "bestseller": True},
     {"title": "One Hundred Years of Solitude", "author": "Gabriel García Márquez", "genre": "Magical Realism", "year": 1967, "rating": 4.11, "ratings_count": 873291, "bestseller": True},
-    {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy", "year": 1997, "rating": 4.47, "ratings_count": 8923014, "bestseller": True},
-    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy", "year": 1937, "rating": 4.28, "ratings_count": 3421098, "bestseller": True},
-    {"title": "A Game of Thrones", "author": "George R.R. Martin", "genre": "Fantasy", "year": 1996, "rating": 4.44, "ratings_count": 2198432, "bestseller": True},
-    {"title": "The Name of the Wind", "author": "Patrick Rothfuss", "genre": "Fantasy", "year": 2007, "rating": 4.52, "ratings_count": 987234, "bestseller": False},
-    {"title": "Mistborn: The Final Empire", "author": "Brandon Sanderson", "genre": "Fantasy", "year": 2006, "rating": 4.46, "ratings_count": 654321, "bestseller": False},
-    {"title": "Dune", "author": "Frank Herbert", "genre": "Science Fiction", "year": 1965, "rating": 4.26, "ratings_count": 1234567, "bestseller": True},
-    {"title": "Ender's Game", "author": "Orson Scott Card", "genre": "Science Fiction", "year": 1985, "rating": 4.30, "ratings_count": 1432198, "bestseller": True},
-    {"title": "The Hitchhiker's Guide to the Galaxy", "author": "Douglas Adams", "genre": "Science Fiction", "year": 1979, "rating": 4.23, "ratings_count": 1821093, "bestseller": True},
-    {"title": "Foundation", "author": "Isaac Asimov", "genre": "Science Fiction", "year": 1951, "rating": 4.17, "ratings_count": 432198, "bestseller": False},
-    {"title": "Brave New World", "author": "Aldous Huxley", "genre": "Dystopian Fiction", "year": 1932, "rating": 3.99, "ratings_count": 1654321, "bestseller": True},
-    {"title": "The Girl with the Dragon Tattoo", "author": "Stieg Larsson", "genre": "Mystery", "year": 2005, "rating": 4.14, "ratings_count": 2876543, "bestseller": True},
-    {"title": "Gone Girl", "author": "Gillian Flynn", "genre": "Thriller", "year": 2012, "rating": 4.12, "ratings_count": 2543210, "bestseller": True},
-    {"title": "The Da Vinci Code", "author": "Dan Brown", "genre": "Thriller", "year": 2003, "rating": 3.91, "ratings_count": 3210987, "bestseller": True},
-    {"title": "And Then There Were None", "author": "Agatha Christie", "genre": "Mystery", "year": 1939, "rating": 4.27, "ratings_count": 987654, "bestseller": True},
-    {"title": "The Silent Patient", "author": "Alex Michaelides", "genre": "Thriller", "year": 2019, "rating": 4.08, "ratings_count": 876543, "bestseller": True},
-    {"title": "Sapiens: A Brief History of Humankind", "author": "Yuval Noah Harari", "genre": "Non-Fiction", "year": 2011, "rating": 4.39, "ratings_count": 1765432, "bestseller": True},
-    {"title": "Atomic Habits", "author": "James Clear", "genre": "Self-Help", "year": 2018, "rating": 4.37, "ratings_count": 987654, "bestseller": True},
-    {"title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "genre": "Psychology", "year": 2011, "rating": 4.18, "ratings_count": 654321, "bestseller": True},
-    {"title": "The Power of Habit", "author": "Charles Duhigg", "genre": "Self-Help", "year": 2012, "rating": 4.13, "ratings_count": 543210, "bestseller": False},
-    {"title": "Educated", "author": "Tara Westover", "genre": "Memoir", "year": 2018, "rating": 4.47, "ratings_count": 1234567, "bestseller": True},
-    {"title": "The Notebook", "author": "Nicholas Sparks", "genre": "Romance", "year": 1996, "rating": 4.10, "ratings_count": 1432198, "bestseller": True},
-    {"title": "Outlander", "author": "Diana Gabaldon", "genre": "Romance", "year": 1991, "rating": 4.25, "ratings_count": 987654, "bestseller": True},
-    {"title": "Me Before You", "author": "Jojo Moyes", "genre": "Romance", "year": 2012, "rating": 4.27, "ratings_count": 876543, "bestseller": True},
-    {"title": "The Fault in Our Stars", "author": "John Green", "genre": "Romance", "year": 2012, "rating": 4.14, "ratings_count": 3654821, "bestseller": True},
-    {"title": "Beach Read", "author": "Emily Henry", "genre": "Romance", "year": 2020, "rating": 3.95, "ratings_count": 543210, "bestseller": False},
-    {"title": "It", "author": "Stephen King", "genre": "Horror", "year": 1986, "rating": 4.25, "ratings_count": 876543, "bestseller": True},
-    {"title": "The Shining", "author": "Stephen King", "genre": "Horror", "year": 1977, "rating": 4.26, "ratings_count": 765432, "bestseller": True},
-    {"title": "Dracula", "author": "Bram Stoker", "genre": "Horror", "year": 1897, "rating": 4.01, "ratings_count": 1098765, "bestseller": False},
-    {"title": "Mexican Gothic", "author": "Silvia Moreno-Garcia", "genre": "Horror", "year": 2020, "rating": 3.69, "ratings_count": 321098, "bestseller": False},
-    {"title": "House of Leaves", "author": "Mark Z. Danielewski", "genre": "Horror", "year": 2000, "rating": 4.12, "ratings_count": 210987, "bestseller": False},
-    {"title": "The Book Thief", "author": "Markus Zusak", "genre": "Historical Fiction", "year": 2005, "rating": 4.39, "ratings_count": 2109876, "bestseller": True},
-    {"title": "All the Light We Cannot See", "author": "Anthony Doerr", "genre": "Historical Fiction", "year": 2014, "rating": 4.34, "ratings_count": 1098765, "bestseller": True},
-    {"title": "The Pillars of the Earth", "author": "Ken Follett", "genre": "Historical Fiction", "year": 1989, "rating": 4.34, "ratings_count": 654321, "bestseller": True},
-    {"title": "Circe", "author": "Madeline Miller", "genre": "Historical Fiction", "year": 2018, "rating": 4.28, "ratings_count": 765432, "bestseller": True},
-    {"title": "The Kite Runner", "author": "Khaled Hosseini", "genre": "Historical Fiction", "year": 2003, "rating": 4.34, "ratings_count": 2876543, "bestseller": True},
-    {"title": "Where the Crawdads Sing", "author": "Delia Owens", "genre": "Contemporary Fiction", "year": 2018, "rating": 4.46, "ratings_count": 2543210, "bestseller": True},
-    {"title": "The Midnight Library", "author": "Matt Haig", "genre": "Contemporary Fiction", "year": 2020, "rating": 4.02, "ratings_count": 876543, "bestseller": True},
-    {"title": "A Man Called Ove", "author": "Fredrik Backman", "genre": "Contemporary Fiction", "year": 2012, "rating": 4.38, "ratings_count": 987654, "bestseller": True},
-    {"title": "Little Fires Everywhere", "author": "Celeste Ng", "genre": "Contemporary Fiction", "year": 2017, "rating": 4.12, "ratings_count": 654321, "bestseller": True},
-    {"title": "Normal People", "author": "Sally Rooney", "genre": "Contemporary Fiction", "year": 2018, "rating": 3.87, "ratings_count": 543210, "bestseller": True},
     {"title": "Jane Eyre", "author": "Charlotte Brontë", "genre": "Classic Fiction", "year": 1847, "rating": 4.14, "ratings_count": 1876543, "bestseller": False},
     {"title": "Wuthering Heights", "author": "Emily Brontë", "genre": "Classic Fiction", "year": 1847, "rating": 3.88, "ratings_count": 1432198, "bestseller": False},
     {"title": "The Catcher in the Rye", "author": "J.D. Salinger", "genre": "Classic Fiction", "year": 1951, "rating": 3.81, "ratings_count": 3210987, "bestseller": True},
     {"title": "Crime and Punishment", "author": "Fyodor Dostoevsky", "genre": "Classic Fiction", "year": 1866, "rating": 4.27, "ratings_count": 765432, "bestseller": False},
     {"title": "The Count of Monte Cristo", "author": "Alexandre Dumas", "genre": "Classic Fiction", "year": 1844, "rating": 4.29, "ratings_count": 876543, "bestseller": False},
+    {"title": "Moby Dick", "author": "Herman Melville", "genre": "Classic Fiction", "year": 1851, "rating": 3.53, "ratings_count": 654321, "bestseller": False},
+    {"title": "War and Peace", "author": "Leo Tolstoy", "genre": "Classic Fiction", "year": 1869, "rating": 4.18, "ratings_count": 432198, "bestseller": False},
+    {"title": "Anna Karenina", "author": "Leo Tolstoy", "genre": "Classic Fiction", "year": 1877, "rating": 4.09, "ratings_count": 765432, "bestseller": False},
+    {"title": "The Brothers Karamazov", "author": "Fyodor Dostoevsky", "genre": "Classic Fiction", "year": 1880, "rating": 4.36, "ratings_count": 321098, "bestseller": False},
+    {"title": "Les Misérables", "author": "Victor Hugo", "genre": "Classic Fiction", "year": 1862, "rating": 4.20, "ratings_count": 876543, "bestseller": True},
+    
+    # Fantasy
+    {"title": "Harry Potter and the Sorcerer's Stone", "author": "J.K. Rowling", "genre": "Fantasy", "year": 1997, "rating": 4.47, "ratings_count": 8923014, "bestseller": True},
+    {"title": "The Hobbit", "author": "J.R.R. Tolkien", "genre": "Fantasy", "year": 1937, "rating": 4.28, "ratings_count": 3421098, "bestseller": True},
+    {"title": "A Game of Thrones", "author": "George R.R. Martin", "genre": "Fantasy", "year": 1996, "rating": 4.44, "ratings_count": 2198432, "bestseller": True},
+    {"title": "The Name of the Wind", "author": "Patrick Rothfuss", "genre": "Fantasy", "year": 2007, "rating": 4.52, "ratings_count": 987234, "bestseller": False},
+    {"title": "Mistborn: The Final Empire", "author": "Brandon Sanderson", "genre": "Fantasy", "year": 2006, "rating": 4.46, "ratings_count": 654321, "bestseller": False},
+    {"title": "The Way of Kings", "author": "Brandon Sanderson", "genre": "Fantasy", "year": 2010, "rating": 4.64, "ratings_count": 432198, "bestseller": True},
+    {"title": "The Lord of the Rings", "author": "J.R.R. Tolkien", "genre": "Fantasy", "year": 1954, "rating": 4.53, "ratings_count": 6543210, "bestseller": True},
+    {"title": "A Wizard of Earthsea", "author": "Ursula K. Le Guin", "genre": "Fantasy", "year": 1968, "rating": 4.01, "ratings_count": 321098, "bestseller": False},
+    
+    # Science Fiction
+    {"title": "Dune", "author": "Frank Herbert", "genre": "Science Fiction", "year": 1965, "rating": 4.26, "ratings_count": 1234567, "bestseller": True},
+    {"title": "Ender's Game", "author": "Orson Scott Card", "genre": "Science Fiction", "year": 1985, "rating": 4.30, "ratings_count": 1432198, "bestseller": True},
+    {"title": "The Hitchhiker's Guide to the Galaxy", "author": "Douglas Adams", "genre": "Science Fiction", "year": 1979, "rating": 4.23, "ratings_count": 1821093, "bestseller": True},
+    {"title": "Foundation", "author": "Isaac Asimov", "genre": "Science Fiction", "year": 1951, "rating": 4.17, "ratings_count": 432198, "bestseller": False},
+    {"title": "Brave New World", "author": "Aldous Huxley", "genre": "Dystopian Fiction", "year": 1932, "rating": 3.99, "ratings_count": 1654321, "bestseller": True},
+    {"title": "Project Hail Mary", "author": "Andy Weir", "genre": "Science Fiction", "year": 2021, "rating": 4.52, "ratings_count": 876543, "bestseller": True},
+    {"title": "The Martian", "author": "Andy Weir", "genre": "Science Fiction", "year": 2011, "rating": 4.41, "ratings_count": 987654, "bestseller": True},
+    {"title": "Neuromancer", "author": "William Gibson", "genre": "Science Fiction", "year": 1984, "rating": 3.89, "ratings_count": 321098, "bestseller": False},
+    {"title": "Snow Crash", "author": "Neal Stephenson", "genre": "Science Fiction", "year": 1992, "rating": 4.03, "ratings_count": 234567, "bestseller": False},
+    {"title": "Ready Player One", "author": "Ernest Cline", "genre": "Science Fiction", "year": 2011, "rating": 4.25, "ratings_count": 876543, "bestseller": True},
+    
+    # Mystery & Thriller
+    {"title": "The Girl with the Dragon Tattoo", "author": "Stieg Larsson", "genre": "Mystery", "year": 2005, "rating": 4.14, "ratings_count": 2876543, "bestseller": True},
+    {"title": "Gone Girl", "author": "Gillian Flynn", "genre": "Thriller", "year": 2012, "rating": 4.12, "ratings_count": 2543210, "bestseller": True},
+    {"title": "The Da Vinci Code", "author": "Dan Brown", "genre": "Thriller", "year": 2003, "rating": 3.91, "ratings_count": 3210987, "bestseller": True},
+    {"title": "And Then There Were None", "author": "Agatha Christie", "genre": "Mystery", "year": 1939, "rating": 4.27, "ratings_count": 987654, "bestseller": True},
+    {"title": "The Silent Patient", "author": "Alex Michaelides", "genre": "Thriller", "year": 2019, "rating": 4.08, "ratings_count": 876543, "bestseller": True},
+    {"title": "In Cold Blood", "author": "Truman Capote", "genre": "True Crime", "year": 1966, "rating": 4.08, "ratings_count": 432198, "bestseller": True},
+    {"title": "The Girl on the Train", "author": "Paula Hawkins", "genre": "Thriller", "year": 2015, "rating": 3.94, "ratings_count": 2109876, "bestseller": True},
+    {"title": "Big Little Lies", "author": "Liane Moriarty", "genre": "Mystery", "year": 2014, "rating": 4.07, "ratings_count": 765432, "bestseller": True},
+    
+    # Non-Fiction & Self-Help
+    {"title": "Sapiens: A Brief History of Humankind", "author": "Yuval Noah Harari", "genre": "Non-Fiction", "year": 2011, "rating": 4.39, "ratings_count": 1765432, "bestseller": True},
+    {"title": "Atomic Habits", "author": "James Clear", "genre": "Self-Help", "year": 2018, "rating": 4.37, "ratings_count": 987654, "bestseller": True},
+    {"title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "genre": "Psychology", "year": 2011, "rating": 4.18, "ratings_count": 654321, "bestseller": True},
+    {"title": "The Power of Habit", "author": "Charles Duhigg", "genre": "Self-Help", "year": 2012, "rating": 4.13, "ratings_count": 543210, "bestseller": False},
+    {"title": "Educated", "author": "Tara Westover", "genre": "Memoir", "year": 2018, "rating": 4.47, "ratings_count": 1234567, "bestseller": True},
+    {"title": "Becoming", "author": "Michelle Obama", "genre": "Memoir", "year": 2018, "rating": 4.53, "ratings_count": 1543210, "bestseller": True},
+    {"title": "Steve Jobs", "author": "Walter Isaacson", "genre": "Biography", "year": 2011, "rating": 4.18, "ratings_count": 987654, "bestseller": True},
+    {"title": "The Subtle Art of Not Giving a F*ck", "author": "Mark Manson", "genre": "Self-Help", "year": 2016, "rating": 3.93, "ratings_count": 1234567, "bestseller": True},
+    {"title": "Zero to One", "author": "Peter Thiel", "genre": "Business", "year": 2014, "rating": 4.18, "ratings_count": 543210, "bestseller": True},
+    {"title": "The Lean Startup", "author": "Eric Ries", "genre": "Business", "year": 2011, "rating": 4.11, "ratings_count": 432198, "bestseller": True},
+    {"title": "Deep Work", "author": "Cal Newport", "genre": "Self-Help", "year": 2016, "rating": 4.18, "ratings_count": 321098, "bestseller": True},
+    {"title": "Meditations", "author": "Marcus Aurelius", "genre": "Philosophy", "year": 180, "rating": 4.26, "ratings_count": 432198, "bestseller": False},
+    
+    # Romance
+    {"title": "The Notebook", "author": "Nicholas Sparks", "genre": "Romance", "year": 1996, "rating": 4.10, "ratings_count": 1432198, "bestseller": True},
+    {"title": "Outlander", "author": "Diana Gabaldon", "genre": "Romance", "year": 1991, "rating": 4.25, "ratings_count": 987654, "bestseller": True},
+    {"title": "Me Before You", "author": "Jojo Moyes", "genre": "Romance", "year": 2012, "rating": 4.27, "ratings_count": 876543, "bestseller": True},
+    {"title": "The Fault in Our Stars", "author": "John Green", "genre": "Romance", "year": 2012, "rating": 4.14, "ratings_count": 3654821, "bestseller": True},
+    {"title": "Beach Read", "author": "Emily Henry", "genre": "Romance", "year": 2020, "rating": 3.95, "ratings_count": 543210, "bestseller": False},
+    {"title": "It Ends with Us", "author": "Colleen Hoover", "genre": "Romance", "year": 2016, "rating": 4.38, "ratings_count": 2109876, "bestseller": True},
+    {"title": "The Seven Husbands of Evelyn Hugo", "author": "Taylor Jenkins Reid", "genre": "Romance", "year": 2017, "rating": 4.46, "ratings_count": 1543210, "bestseller": True},
+    {"title": "People We Meet on Vacation", "author": "Emily Henry", "genre": "Romance", "year": 2021, "rating": 4.08, "ratings_count": 654321, "bestseller": True},
+    
+    # Horror
+    {"title": "It", "author": "Stephen King", "genre": "Horror", "year": 1986, "rating": 4.25, "ratings_count": 876543, "bestseller": True},
+    {"title": "The Shining", "author": "Stephen King", "genre": "Horror", "year": 1977, "rating": 4.26, "ratings_count": 765432, "bestseller": True},
+    {"title": "Dracula", "author": "Bram Stoker", "genre": "Horror", "year": 1897, "rating": 4.01, "ratings_count": 1098765, "bestseller": False},
+    {"title": "Mexican Gothic", "author": "Silvia Moreno-Garcia", "genre": "Horror", "year": 2020, "rating": 3.69, "ratings_count": 321098, "bestseller": False},
+    {"title": "House of Leaves", "author": "Mark Z. Danielewski", "genre": "Horror", "year": 2000, "rating": 4.12, "ratings_count": 210987, "bestseller": False},
+    {"title": "Pet Sematary", "author": "Stephen King", "genre": "Horror", "year": 1983, "rating": 4.05, "ratings_count": 543210, "bestseller": True},
+    {"title": "The Haunting of Hill House", "author": "Shirley Jackson", "genre": "Horror", "year": 1959, "rating": 4.02, "ratings_count": 321098, "bestseller": False},
+    
+    # Historical Fiction
+    {"title": "The Book Thief", "author": "Markus Zusak", "genre": "Historical Fiction", "year": 2005, "rating": 4.39, "ratings_count": 2109876, "bestseller": True},
+    {"title": "All the Light We Cannot See", "author": "Anthony Doerr", "genre": "Historical Fiction", "year": 2014, "rating": 4.34, "ratings_count": 1098765, "bestseller": True},
+    {"title": "The Pillars of the Earth", "author": "Ken Follett", "genre": "Historical Fiction", "year": 1989, "rating": 4.34, "ratings_count": 654321, "bestseller": True},
+    {"title": "Circe", "author": "Madeline Miller", "genre": "Historical Fiction", "year": 2018, "rating": 4.28, "ratings_count": 765432, "bestseller": True},
+    {"title": "The Kite Runner", "author": "Khaled Hosseini", "genre": "Historical Fiction", "year": 2003, "rating": 4.34, "ratings_count": 2876543, "bestseller": True},
+    {"title": "A Thousand Splendid Suns", "author": "Khaled Hosseini", "genre": "Historical Fiction", "year": 2007, "rating": 4.42, "ratings_count": 1234567, "bestseller": True},
+    {"title": "The Tattooist of Auschwitz", "author": "Heather Morris", "genre": "Historical Fiction", "year": 2018, "rating": 4.29, "ratings_count": 654321, "bestseller": True},
+    {"title": "The Song of Achilles", "author": "Madeline Miller", "genre": "Historical Fiction", "year": 2011, "rating": 4.38, "ratings_count": 876543, "bestseller": True},
+    
+    # Contemporary Fiction
+    {"title": "Where the Crawdads Sing", "author": "Delia Owens", "genre": "Contemporary Fiction", "year": 2018, "rating": 4.46, "ratings_count": 2543210, "bestseller": True},
+    {"title": "The Midnight Library", "author": "Matt Haig", "genre": "Contemporary Fiction", "year": 2020, "rating": 4.02, "ratings_count": 876543, "bestseller": True},
+    {"title": "A Man Called Ove", "author": "Fredrik Backman", "genre": "Contemporary Fiction", "year": 2012, "rating": 4.38, "ratings_count": 987654, "bestseller": True},
+    {"title": "Little Fires Everywhere", "author": "Celeste Ng", "genre": "Contemporary Fiction", "year": 2017, "rating": 4.12, "ratings_count": 654321, "bestseller": True},
+    {"title": "Normal People", "author": "Sally Rooney", "genre": "Contemporary Fiction", "year": 2018, "rating": 3.87, "ratings_count": 543210, "bestseller": True},
+    {"title": "The Alchemist", "author": "Paulo Coelho", "genre": "Philosophy", "year": 1988, "rating": 3.92, "ratings_count": 2876543, "bestseller": True},
+    {"title": "Life of Pi", "author": "Yann Martel", "genre": "Contemporary Fiction", "year": 2001, "rating": 3.94, "ratings_count": 1543210, "bestseller": True},
+    {"title": "Tomorrow and Tomorrow and Tomorrow", "author": "Gabrielle Zevin", "genre": "Contemporary Fiction", "year": 2022, "rating": 4.21, "ratings_count": 543210, "bestseller": True},
+    
+    # Young Adult
+    {"title": "The Hunger Games", "author": "Suzanne Collins", "genre": "Young Adult", "year": 2008, "rating": 4.32, "ratings_count": 7654321, "bestseller": True},
+    {"title": "Divergent", "author": "Veronica Roth", "genre": "Young Adult", "year": 2011, "rating": 4.15, "ratings_count": 3456789, "bestseller": True},
+    {"title": "Percy Jackson: The Lightning Thief", "author": "Rick Riordan", "genre": "Young Adult", "year": 2005, "rating": 4.29, "ratings_count": 2345678, "bestseller": True},
+    {"title": "Twilight", "author": "Stephenie Meyer", "genre": "Young Adult", "year": 2005, "rating": 3.64, "ratings_count": 5678901, "bestseller": True},
+    {"title": "The Maze Runner", "author": "James Dashner", "genre": "Young Adult", "year": 2009, "rating": 4.03, "ratings_count": 1234567, "bestseller": True},
+    {"title": "The Giver", "author": "Lois Lowry", "genre": "Young Adult", "year": 1993, "rating": 4.13, "ratings_count": 2109876, "bestseller": True},
+    {"title": "Six of Crows", "author": "Leigh Bardugo", "genre": "Young Adult", "year": 2015, "rating": 4.49, "ratings_count": 654321, "bestseller": True},
+    {"title": "Children of Blood and Bone", "author": "Tomi Adeyemi", "genre": "Young Adult", "year": 2018, "rating": 4.09, "ratings_count": 321098, "bestseller": True},
+    {"title": "The Perks of Being a Wallflower", "author": "Stephen Chbosky", "genre": "Young Adult", "year": 1999, "rating": 4.22, "ratings_count": 1765432, "bestseller": True},
+    {"title": "Simon vs. the Homo Sapiens Agenda", "author": "Becky Albertalli", "genre": "Young Adult", "year": 2015, "rating": 4.27, "ratings_count": 543210, "bestseller": True},
+    {"title": "Fahrenheit 451", "author": "Ray Bradbury", "genre": "Dystopian Fiction", "year": 1953, "rating": 3.97, "ratings_count": 1987654, "bestseller": True},
+    {"title": "Slaughterhouse-Five", "author": "Kurt Vonnegut", "genre": "Science Fiction", "year": 1969, "rating": 4.09, "ratings_count": 876543, "bestseller": True},
+    {"title": "The Road", "author": "Cormac McCarthy", "genre": "Dystopian Fiction", "year": 2006, "rating": 3.98, "ratings_count": 765432, "bestseller": True},
+    {"title": "Frankenstein", "author": "Mary Shelley", "genre": "Horror", "year": 1818, "rating": 3.84, "ratings_count": 1432198, "bestseller": False},
+    {"title": "Rebecca", "author": "Daphne du Maurier", "genre": "Mystery", "year": 1938, "rating": 4.24, "ratings_count": 543210, "bestseller": True},
+    {"title": "The Picture of Dorian Gray", "author": "Oscar Wilde", "genre": "Classic Fiction", "year": 1890, "rating": 4.12, "ratings_count": 1234567, "bestseller": False},
 ]
 
 # ============================================================================
@@ -356,7 +425,17 @@ USER_NAMES = [
     "Scarlett Adams", "Samuel Nelson", "Victoria Hill", "Owen Campbell", "Grace Mitchell",
     "Gabriel Roberts", "Chloe Carter", "Carter Phillips", "Lily Evans", "Jayden Turner",
     "Zoey Collins", "Dylan Edwards", "Penelope Stewart", "Luke Morris", "Layla Murphy",
-    "Anthony Rivera", "Riley Cook", "Isaac Rogers", "Nora Morgan", "Christopher Cooper"
+    "Anthony Rivera", "Riley Cook", "Isaac Rogers", "Nora Morgan", "Christopher Cooper",
+    "Hannah Peterson", "Andrew Reed", "Aria Bailey", "Joshua Howard", "Ellie Ward",
+    "Nathan Foster", "Audrey Sanders", "Ryan Price", "Leah Bennett", "Brandon Wood",
+    "Savannah Brooks", "Kevin Kelly", "Brooklyn Hughes", "Justin Long", "Stella Ross",
+    "Austin Powell", "Claire Jenkins", "Evan Perry", "Violet Butler", "Aaron Russell",
+    "Lucy Griffin", "Adam Hayes", "Anna Simmons", "Tyler Patterson", "Maya Henderson",
+    "Zachary Coleman", "Autumn Richardson", "Hunter Cox", "Bella Howard", "Jordan Ward",
+    "Katherine Gonzalez", "Jason Bryant", "Natalie Alexander", "Caleb Russell", "Sarah Torres",
+    "Christian Gray", "Aaliyah Ramirez", "Jonathan Watson", "Madison Brooks", "Nicholas Flores",
+    "Taylor Washington", "Adrian Butler", "Samantha Barnes", "Thomas Fisher", "Alexandra Rivera",
+    "Patrick Sullivan", "Morgan Price", "Marcus Chen", "Rachel Kim", "Vincent Lee"
 ]
 
 READING_MOODS = {
@@ -406,7 +485,7 @@ def load_books_data():
 
 
 @st.cache_data
-def generate_user_ratings(books_df, n_users=50, seed=42):
+def generate_user_ratings(books_df, n_users=100, seed=42):
     """Generate synthetic user ratings with realistic names for demonstration."""
     np.random.seed(seed)
     random.seed(seed)
@@ -414,7 +493,7 @@ def generate_user_ratings(books_df, n_users=50, seed=42):
     ratings = []
     for user_id in range(min(n_users, len(USER_NAMES))):
         n_ratings = random.randint(10, 30)
-        user_books = random.sample(range(len(books_df)), n_ratings)
+        user_books = random.sample(range(len(books_df)), min(n_ratings, len(books_df)))
         
         for book_id in user_books:
             base_rating = books_df.iloc[book_id]["rating"]
