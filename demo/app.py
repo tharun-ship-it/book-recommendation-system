@@ -343,6 +343,22 @@ FAMOUS_BOOKS = [
     {"title": "The Count of Monte Cristo", "author": "Alexandre Dumas", "genre": "Classic Fiction", "year": 1844, "rating": 4.29, "ratings_count": 876543, "bestseller": False},
 ]
 
+# ============================================================================
+# USER NAMES - Realistic names for demo
+# ============================================================================
+USER_NAMES = [
+    "Emma Thompson", "Liam Anderson", "Olivia Martinez", "Noah Williams", "Ava Johnson",
+    "Ethan Brown", "Sophia Davis", "Mason Garcia", "Isabella Miller", "James Wilson",
+    "Mia Moore", "Benjamin Taylor", "Charlotte Thomas", "Lucas Jackson", "Amelia White",
+    "Henry Harris", "Harper Martin", "Alexander Lee", "Evelyn Clark", "Sebastian Lewis",
+    "Abigail Walker", "Jack Robinson", "Emily Hall", "Daniel Allen", "Elizabeth Young",
+    "Michael King", "Sofia Wright", "David Scott", "Avery Green", "Joseph Baker",
+    "Scarlett Adams", "Samuel Nelson", "Victoria Hill", "Owen Campbell", "Grace Mitchell",
+    "Gabriel Roberts", "Chloe Carter", "Carter Phillips", "Lily Evans", "Jayden Turner",
+    "Zoey Collins", "Dylan Edwards", "Penelope Stewart", "Luke Morris", "Layla Murphy",
+    "Anthony Rivera", "Riley Cook", "Isaac Rogers", "Nora Morgan", "Christopher Cooper"
+]
+
 READING_MOODS = {
     "🌟 Adventurous": ["Fantasy", "Science Fiction", "Thriller"],
     "💕 Romantic": ["Romance", "Contemporary Fiction"],
@@ -390,12 +406,13 @@ def load_books_data():
 
 
 @st.cache_data
-def generate_user_ratings(books_df, n_users=200, seed=42):
+def generate_user_ratings(books_df, n_users=50, seed=42):
+    """Generate synthetic user ratings with realistic names for demonstration."""
     np.random.seed(seed)
     random.seed(seed)
     
     ratings = []
-    for user_id in range(n_users):
+    for user_id in range(min(n_users, len(USER_NAMES))):
         n_ratings = random.randint(10, 30)
         user_books = random.sample(range(len(books_df)), n_ratings)
         
@@ -404,7 +421,7 @@ def generate_user_ratings(books_df, n_users=200, seed=42):
             noise = np.random.normal(0, 0.5)
             rating = max(1, min(5, round(base_rating + noise)))
             ratings.append({
-                "user_id": f"user_{user_id:03d}",
+                "user_id": USER_NAMES[user_id],
                 "book_id": book_id,
                 "rating": rating
             })
@@ -741,7 +758,7 @@ def main():
         st.markdown("<br>", unsafe_allow_html=True)
         
         if rec_method == "👤 By User Profile":
-            users = ratings_df["user_id"].unique()[:50]
+            users = ratings_df["user_id"].unique()
             selected_user = st.selectbox(
                 "Select a User Profile",
                 users,
@@ -749,10 +766,10 @@ def main():
                 key=f"user_select_{st.session_state.user_selectbox_key}"
             )
             
-            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
             
-            # Buttons row with proper spacing
-            col_btn1, col_btn2, col_space = st.columns([1.5, 1, 3.5])
+            # Buttons row with proper spacing - matching Find Similar section
+            col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.8, 0.2, 1, 3])
             
             with col_btn1:
                 get_recs = st.button("🚀 Get Recommendations", type="primary")
@@ -784,6 +801,35 @@ def main():
                     
                     st.markdown("<br>", unsafe_allow_html=True)
                     
+                    # User Rating History - Expandable Section
+                    with st.expander(f"📚 View {st.session_state.selected_user}'s Reading History ({len(user_ratings)} books)"):
+                        # Merge with book details and sort by rating
+                        user_books = user_ratings.merge(
+                            books_df[["book_id", "title", "author", "genre"]], 
+                            on="book_id"
+                        ).sort_values("rating", ascending=False)
+                        
+                        # Display as a nice table
+                        for _, row in user_books.iterrows():
+                            stars = "★" * int(row["rating"]) + "☆" * (5 - int(row["rating"]))
+                            st.markdown(f"""
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #f0e6e0;">
+                                <div>
+                                    <span style="font-weight: 600; color: {COLORS['text_dark']};">{row['title']}</span>
+                                    <span style="color: {COLORS['text_light']}; font-size: 0.85rem;"> by {row['author']}</span>
+                                </div>
+                                <div style="color: {COLORS['secondary']}; font-size: 1.1rem;">{stars}</div>
+                            </div>
+                            """, unsafe_allow_html=True)
+                        
+                        st.markdown(f"""
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: {COLORS['card_bg']}; border-radius: 8px; font-size: 0.85rem; color: {COLORS['text_light']};">
+                            💡 <strong>How it works:</strong> Our KNN algorithm finds users with similar rating patterns and recommends books they loved that {st.session_state.selected_user} hasn't read yet.
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    
                     recommendations = get_user_recommendations(
                         st.session_state.selected_user, ratings_df, books_df, n_recommendations
                     )
@@ -805,10 +851,10 @@ def main():
                 key=f"mood_select_{st.session_state.mood_selectbox_key}"
             )
             
-            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
             
-            # Buttons row with proper spacing
-            col_btn1, col_btn2, col_space = st.columns([1.2, 1, 3.8])
+            # Buttons row with proper spacing - matching Find Similar section
+            col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 1, 3.6])
             
             with col_btn1:
                 get_mood_recs = st.button("🎭 Find Books", type="primary")
@@ -902,9 +948,10 @@ def main():
             key=f"book_select_{st.session_state.similar_book_key}"
         )
         
-        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
         
-        col_btn1, col_btn2, col_space = st.columns([1.3, 1, 3.7])
+        # Buttons row with proper spacing - consistent with other sections
+        col_btn1, col_space1, col_btn2, col_space2 = st.columns([1.2, 0.2, 1, 3.6])
         
         with col_btn1:
             find_similar = st.button("🔍 Find Similar", type="primary")
