@@ -439,13 +439,13 @@ USER_NAMES = [
 ]
 
 READING_MOODS = {
-    "🌟 Adventurous": ["Fantasy", "Science Fiction", "Thriller"],
-    "💕 Romantic": ["Romance", "Contemporary Fiction"],
-    "🧠 Intellectual": ["Non-Fiction", "Psychology", "Self-Help"],
-    "😱 Thrilling": ["Horror", "Thriller", "Mystery"],
-    "📜 Classic Vibes": ["Classic Fiction", "Historical Fiction"],
-    "🎭 Emotional": ["Contemporary Fiction", "Memoir", "Romance"],
-    "🔮 Escapist": ["Fantasy", "Magical Realism", "Science Fiction"],
+    "🌟 Adventurous": ["Fantasy", "Science Fiction", "Thriller", "Young Adult"],
+    "💕 Romantic": ["Romance", "Contemporary Fiction", "Memoir"],
+    "🧠 Intellectual": ["Non-Fiction", "Psychology", "Self-Help", "Business", "Philosophy", "Biography"],
+    "😱 Thrilling": ["Horror", "Thriller", "Mystery", "True Crime", "Dystopian Fiction"],
+    "📜 Classic Vibes": ["Classic Fiction", "Historical Fiction", "Magical Realism"],
+    "🎭 Emotional": ["Contemporary Fiction", "Memoir", "Romance", "Young Adult"],
+    "🔮 Escapist": ["Fantasy", "Magical Realism", "Science Fiction", "Young Adult"],
 }
 
 
