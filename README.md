@@ -49,29 +49,12 @@ The system automatically:
 ### 🔄 Pipeline Architecture
 
 ```
-                              BOOK RECOMMENDATION PIPELINE
-    ╔═══════════════════════════════════════════════════════════════════════════╗
-    ║                                                                           ║
-    ║   ┌─────────────┐      ┌─────────────┐      ┌─────────────────────────┐  ║
-    ║   │             │      │             │      │                         │  ║
-    ║   │    USER     │─────▶│   FEATURE   │─────▶│       KNN MODEL         │  ║
-    ║   │   INPUT     │      │  EXTRACTION │      │   (Cosine Similarity)   │  ║
-    ║   │             │      │             │      │                         │  ║
-    ║   └─────────────┘      └─────────────┘      └────────────┬────────────┘  ║
-    ║    • User Profile       • TF-IDF Vectors                 │               ║
-    ║    • Reading Mood       • Rating Matrix                  │               ║
-    ║    • Book Selection     • Genre Encoding                 ▼               ║
-    ║                                                ┌─────────────────────┐   ║
-    ║   ┌─────────────┐      ┌─────────────┐        │                     │   ║
-    ║   │             │      │             │        │   HYBRID SCORING    │   ║
-    ║   │   OUTPUT    │◀─────│   RANKING   │◀───────│   CF: 60%           │   ║
-    ║   │             │      │   ENGINE    │        │   Content: 40%      │   ║
-    ║   └─────────────┘      └─────────────┘        │                     │   ║
-    ║    • Top-K Books        • Score Sorting       └─────────────────────┘   ║
-    ║    • Match Scores       • Filtering                                      ║
-    ║    • Explanations                                                        ║
-    ║                                                                           ║
-    ╚═══════════════════════════════════════════════════════════════════════════╝
+┌────────────────┐     ┌────────────────┐     ┌────────────────┐     ┌────────────────┐     ┌────────────────┐
+│                │     │                │     │                │     │                │     │                │
+│   USER INPUT   │────▶│    FEATURE     │────▶│   KNN MODEL    │────▶│    HYBRID      │────▶│    OUTPUT      │
+│                │     │   EXTRACTION   │     │                │     │    SCORING     │     │                │
+│                │     │                │     │                │     │                │     │                │
+└────────────────┘     └────────────────┘     └────────────────┘     └────────────────┘     └────────────────┘
 ```
 
 ---
@@ -243,16 +226,6 @@ book-recommendation-system/
 
 *Benchmarked on UCSD Book Graph dataset (test set: 20% holdout with stratified split)*
 
-### 📈 Metric Definitions
-
-| Metric | Description |
-|--------|-------------|
-| **Precision@K** | Fraction of recommended items that are relevant |
-| **Recall@K** | Fraction of relevant items that are recommended |
-| **NDCG@K** | Normalized Discounted Cumulative Gain (ranking quality) |
-| **Hit Rate** | Percentage of users with at least one relevant recommendation |
-| **Coverage** | Percentage of items that can be recommended |
-
 ---
 
 ## 📸 Results
@@ -265,8 +238,6 @@ book-recommendation-system/
 
 All models achieve **>70% precision**, with **Hybrid (CF + Content)** leading at **89.2%**. The consistent high performance validates the effectiveness of combining collaborative filtering with content-based features.
 
----
-
 ### Precision-Recall Tradeoff
 
 <p align="center">
@@ -275,8 +246,6 @@ All models achieve **>70% precision**, with **Hybrid (CF + Content)** leading at
 
 As K increases, recall improves while precision slightly decreases. The sweet spot at **K=10** balances both metrics effectively for optimal user experience.
 
----
-
 ### Genre Distribution
 
 <p align="center">
@@ -284,8 +253,6 @@ As K increases, recall improves while precision slightly decreases. The sweet sp
 </p>
 
 The curated dataset covers **20 genres** with Classic Fiction, Young Adult, and Science Fiction being the most represented categories.
-
----
 
 ### Rating Distribution
 
@@ -322,17 +289,6 @@ pip install -r requirements.txt
 
 # Install package in development mode
 pip install -e .
-```
-
-### Dependencies
-
-```txt
-streamlit>=1.10.0
-pandas>=1.3.0
-numpy>=1.21.0
-scikit-learn>=1.0.0
-scipy>=1.7.0
-plotly>=5.0.0
 ```
 
 ---
@@ -452,19 +408,6 @@ evaluation:
 | `HybridModel` | Combines CF and content-based scores |
 | `DataLoader` | Dataset loading and preprocessing |
 | `Evaluator` | Metrics calculation and model comparison |
-
-### Algorithm Details
-
-**K-Nearest Neighbors (KNN):**
-- Finds K most similar users/items based on rating patterns
-- Uses cosine similarity for sparse rating matrices
-- Weighted voting for final predictions
-
-**Hybrid Scoring:**
-```
-final_score = (cf_weight × cf_score) + (content_weight × content_score)
-```
-Where `cf_weight = 0.6` and `content_weight = 0.4` by default.
 
 ---
 
