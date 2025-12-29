@@ -49,15 +49,29 @@ The system automatically:
 ### 🔄 Pipeline Architecture
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────────┐
-│   User Input    │────▶│  Feature Extract │────▶│     KNN Model       │
-│  (Profile/Mood) │     │  (TF-IDF/Ratings)│     │ (Cosine Similarity) │
-└─────────────────┘     └──────────────────┘     └──────────┬──────────┘
-                                                            │
-┌─────────────────┐     ┌──────────────────┐                │
-│  Ranked Books   │◀────│  Hybrid Scoring  │◀───────────────┘
-│  with Scores    │     │  (CF + Content)  │
-└─────────────────┘     └──────────────────┘
+                              BOOK RECOMMENDATION PIPELINE
+    ╔═══════════════════════════════════════════════════════════════════════════╗
+    ║                                                                           ║
+    ║   ┌─────────────┐      ┌─────────────┐      ┌─────────────────────────┐  ║
+    ║   │             │      │             │      │                         │  ║
+    ║   │    USER     │─────▶│   FEATURE   │─────▶│       KNN MODEL         │  ║
+    ║   │   INPUT     │      │  EXTRACTION │      │   (Cosine Similarity)   │  ║
+    ║   │             │      │             │      │                         │  ║
+    ║   └─────────────┘      └─────────────┘      └────────────┬────────────┘  ║
+    ║    • User Profile       • TF-IDF Vectors                 │               ║
+    ║    • Reading Mood       • Rating Matrix                  │               ║
+    ║    • Book Selection     • Genre Encoding                 ▼               ║
+    ║                                                ┌─────────────────────┐   ║
+    ║   ┌─────────────┐      ┌─────────────┐        │                     │   ║
+    ║   │             │      │             │        │   HYBRID SCORING    │   ║
+    ║   │   OUTPUT    │◀─────│   RANKING   │◀───────│   CF: 60%           │   ║
+    ║   │             │      │   ENGINE    │        │   Content: 40%      │   ║
+    ║   └─────────────┘      └─────────────┘        │                     │   ║
+    ║    • Top-K Books        • Score Sorting       └─────────────────────┘   ║
+    ║    • Match Scores       • Filtering                                      ║
+    ║    • Explanations                                                        ║
+    ║                                                                           ║
+    ╚═══════════════════════════════════════════════════════════════════════════╝
 ```
 
 ---
@@ -68,28 +82,28 @@ The system automatically:
 Get personalized book recommendations with match scores based on user reading history and preferences.
 
 <p align="center">
-  <img src="assets/screenshots/app_recommendations.png" alt="Personalized Recommendations Demo" width="700"/>
+  <img src="assets/screenshots/app_recommendations.png" alt="Personalized Recommendations Demo" width="800"/>
 </p>
 
 ### User Reading History
 View detailed reading history with star ratings - complete transparency into how recommendations are generated.
 
 <p align="center">
-  <img src="assets/screenshots/app_reading_history.png" alt="User Reading History" width="700"/>
+  <img src="assets/screenshots/app_reading_history.png" alt="User Reading History" width="800"/>
 </p>
 
 ### Reading Mood Selection
 Choose from 7 reading moods and discover books across 20 genres that match your current vibe.
 
 <p align="center">
-  <img src="assets/screenshots/app_mood_selection.png" alt="Mood-Based Recommendations" width="700"/>
+  <img src="assets/screenshots/app_mood_selection.png" alt="Mood-Based Recommendations" width="800"/>
 </p>
 
 ### Find Similar Books
 Select any book you enjoyed and find similar titles using KNN similarity matching with genre and author analysis.
 
 <p align="center">
-  <img src="assets/screenshots/app_similar_books.png" alt="Similar Books Feature" width="700"/>
+  <img src="assets/screenshots/app_similar_books.png" alt="Similar Books Feature" width="800"/>
 </p>
 
 ---
@@ -168,7 +182,7 @@ Large-scale book dataset collected from Goodreads for recommendation research, c
 ### 📚 Sample Books
 
 <p align="center">
-  <img src="assets/screenshots/sample_books.png" alt="Sample Books Dataset" width="700"/>
+  <img src="assets/screenshots/sample_books.png" alt="Sample Books Dataset" width="800"/>
 </p>
 
 ### 🎭 Reading Moods
@@ -246,7 +260,7 @@ book-recommendation-system/
 ### Model Comparison
 
 <p align="center">
-  <img src="assets/screenshots/model_comparison.png" alt="Model Performance Comparison" width="700"/>
+  <img src="assets/screenshots/model_comparison.png" alt="Model Performance Comparison" width="800"/>
 </p>
 
 All models achieve **>70% precision**, with **Hybrid (CF + Content)** leading at **89.2%**. The consistent high performance validates the effectiveness of combining collaborative filtering with content-based features.
@@ -256,7 +270,7 @@ All models achieve **>70% precision**, with **Hybrid (CF + Content)** leading at
 ### Precision-Recall Tradeoff
 
 <p align="center">
-  <img src="assets/screenshots/precision_recall.png" alt="Precision-Recall Tradeoff" width="700"/>
+  <img src="assets/screenshots/precision_recall.png" alt="Precision-Recall Tradeoff" width="800"/>
 </p>
 
 As K increases, recall improves while precision slightly decreases. The sweet spot at **K=10** balances both metrics effectively for optimal user experience.
@@ -266,7 +280,7 @@ As K increases, recall improves while precision slightly decreases. The sweet sp
 ### Genre Distribution
 
 <p align="center">
-  <img src="assets/screenshots/genre_distribution.png" alt="Genre Distribution" width="700"/>
+  <img src="assets/screenshots/genre_distribution.png" alt="Genre Distribution" width="800"/>
 </p>
 
 The curated dataset covers **20 genres** with Classic Fiction, Young Adult, and Science Fiction being the most represented categories.
@@ -276,7 +290,7 @@ The curated dataset covers **20 genres** with Classic Fiction, Young Adult, and 
 ### Rating Distribution
 
 <p align="center">
-  <img src="assets/screenshots/rating_distribution.png" alt="Rating Distribution" width="700"/>
+  <img src="assets/screenshots/rating_distribution.png" alt="Rating Distribution" width="800"/>
 </p>
 
 User ratings follow a typical distribution with most ratings between **4-5 stars**, indicating users tend to rate books they enjoy.
@@ -394,10 +408,10 @@ for book in similar:
 
 ## 📚 Documentation
 
-### Model Configuration
+### ⚙️ Model Configuration
 
 <p align="center">
-  <img src="assets/screenshots/model_config.png" alt="Model Configuration" width="500"/>
+  <img src="assets/screenshots/model_config.png" alt="Model Configuration" width="800"/>
 </p>
 
 ### Configuration File
