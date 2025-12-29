@@ -49,12 +49,27 @@ The system automatically:
 ### 🔄 Pipeline Architecture
 
 ```
-┌────────────────┐     ┌────────────────┐     ┌────────────────┐     ┌────────────────┐     ┌────────────────┐
-│                │     │                │     │                │     │                │     │                │
-│   USER INPUT   │────▶│    FEATURE     │────▶│   KNN MODEL    │────▶│    HYBRID      │────▶│    OUTPUT      │
-│                │     │   EXTRACTION   │     │                │     │    SCORING     │     │                │
-│                │     │                │     │                │     │                │     │                │
-└────────────────┘     └────────────────┘     └────────────────┘     └────────────────┘     └────────────────┘
+                                BOOK RECOMMENDATION PIPELINE
+
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────────────┐
+│                 │      │                 │      │                         │
+│   USER INPUT    │─────▶│    FEATURE      │─────▶│       KNN MODEL         │
+│                 │      │   EXTRACTION    │      │   (Cosine Similarity)   │
+│                 │      │                 │      │                         │
+└─────────────────┘      └─────────────────┘      └────────────┬────────────┘
+ • User Profile           • TF-IDF Vectors                     │
+ • Reading Mood           • Rating Matrix                      │
+ • Book Selection         • Genre Encoding                     ▼
+                                                  ┌─────────────────────────┐
+┌─────────────────┐      ┌─────────────────┐      │                         │
+│                 │      │                 │      │     HYBRID SCORING      │
+│     OUTPUT      │◀─────│    RANKING      │◀─────│     CF: 60%             │
+│                 │      │    ENGINE       │      │     Content: 40%        │
+│                 │      │                 │      │                         │
+└─────────────────┘      └─────────────────┘      └─────────────────────────┘
+ • Top-K Books            • Score Sorting
+ • Match Scores           • Filtering
+ • Explanations
 ```
 
 ---
